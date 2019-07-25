@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Use DWT in Electron</title>
+    <script src="https://unpkg.com/dwt/dist/dynamsoft.webtwain.min.js"></script>
+</head>
+
+<body>
+    <h1>Use DWT in Electron</h1>
+    We are using node <script>
+        document.write(process.versions.node)
+    </script>,
+    Chrome <script>
+        document.write(process.versions.chrome)
+    </script>,
+    and Electron <script>
+        document.write(process.versions.electron)
+    </script>.
+    <table>
+        <tr>
+            <td>
+                <!-- dwtcontrolContainer is the default div id for Dynamic Web TWAIN control.
+               If you need to rename the id, you should also change the id in dynamsoft.webtwain.config.js accordingly. -->
+                <div id="dwtcontrolContainer"></div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <input type="button" value="Scan" onclick="scanImage();" />
+                <input type="button" value="Load" onclick="loadImage();" />
+                <input type="button" value="Save" onclick="saveImage();" />
+            </td>
+        </tr>
+    </table>
+
+    <script type="text/javascript">
+        var DWObject;
+
+        Dynamsoft.WebTwainEnv.AutoLoad = false;
+        Dynamsoft.WebTwainEnv.Containers = [{
+            ContainerId: 'dwtcontrolContainer',
+            Width: '583px',
+            Height: '513px'
+        }];
+        Dynamsoft.WebTwainEnv.RegisterEvent('OnWebTwainReady', () => {
+            Dynamsoft_OnReady();
+        });
+        /**
+         * In order to use the full version, do the following
+         * 1. Change Dynamsoft.WebTwainEnv.Trial to false
+         * 2. Replace A-Valid-Product-Key with a full version key
+         * 3. Change Dynamsoft.WebTwainEnv.ResourcesPath to point to the full version 
+         *    resource files that you obtain after purchasing a key
+         */
+        Dynamsoft.WebTwainEnv.Trial = true;
+        Dynamsoft.WebTwainEnv.ProductKey = "A-Valid-Product-Key";
+        //Dynamsoft.WebTwainEnv.ResourcesPath = "https://tst.dynamsoft.com/libs/dwt/15.0";
+
+        window.onload = function () {
+            Dynamsoft.WebTwainEnv.Load();
+        };
+
+        function Dynamsoft_OnReady() {
+            DWObject = Dynamsoft.WebTwainEnv.GetWebTwain(
+                'dwtcontrolContainer'
+            ); // Get the Dynamic Web TWAIN object that is embeded in the div with id 'dwtcontrolContainer'
+        }
+
+        function scanImage() {
+            if (DWObject) {
+                DWObject.SelectSource(function () {
+                    var OnAcquireImageSuccess, OnAcquireImageFailure;
+                    OnAcquireImageSuccess = OnAcquireImageFailure = function () {
+                        DWObject.CloseSource();
+                    };
+
+                    DWObject.OpenSource();
+                    DWObject.IfDisableSourceAfterAcquire =
+                        true; // Scanner source will be disabled/closed automatically after the scan. 
+                    DWObject.AcquireImage(OnAcquireImageSuccess, OnAcquireImageFailure);
+                });
+            }
+        }
+
+        //Callback functions for async APIs
+        function OnSuccess() {
+            console.log('successful');
+        }
+
+        function OnFailure(errorCode, errorString) {
+            alert(errorString);
+        }
+
+        function loadImage() {
+            if (DWObject) {
+                DWObject.IfShowFileDialog = true; // Open the system's file dialog to load image
+                DWObject.LoadImageEx("", EnumDWT_ImageType.IT_ALL, OnSuccess,
+                    OnFailure
+                ); // Load images in all supported formats (.bmp, .jpg, .tif, .png, .pdf). OnSuccess or OnFailure will be called after the operation
+            }
+        }
+
+        function saveImage() {
+            if (DWObject) {
+                DWObject.SaveAllAsPDF('C:\\FromDWTInElectron.pdf');
+            }
+        }
+    </script>
+</body>
+
+</html>

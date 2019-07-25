@@ -1,0 +1,18 @@
+{
+  "name": "electron",
+  "version": "1.0.0",
+  "description": "This sample demostrates how to use DWT in an Electron App",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tom-Dynamsoft",
+  "license": "ISC",
+  "keywords": [
+    "Dynamsoft",
+    "document scan",
+    "web twain",
+    "SDK"
+  ]
+}
