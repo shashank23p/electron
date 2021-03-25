@@ -14,5 +14,12 @@
     "document scan",
     "web twain",
     "SDK"
-  ]
+  ],
+  "devDependencies": {
+    "electron": "^12.0.2",
+    "electron-builder": "^22.10.5"
+  },
+  "dependencies": {
+    "dwt": "^16.2.4"
+  }
 }

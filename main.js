@@ -6,9 +6,10 @@ let win;
 
 function createWindow() {
     win = new BrowserWindow({
-        fullscreen: true,
+        fullscreen: false,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            contextIsolation: false
         }
     });
     win.loadFile('index.html');
