@@ -5,6 +5,9 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "build-mac":"electron-builder -m",
+    "build-win":"electron-builder -w",
+    "build":"electron-builder -wml",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tom-Dynamsoft",
